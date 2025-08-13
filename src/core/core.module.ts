@@ -23,6 +23,8 @@ import { GetProductoPaginatedQueryHandler } from './application/features/queries
 import { LoginCommandHandler } from './application/features/commands/handlers/LoginHandler';
 import { SharedModule } from 'src/infrastructure/shared/shared.module';
 import { ConfigService } from '@nestjs/config';
+import { UpdateProductoHandler } from './application/features/commands/handlers/UpdateProductoCommandHandler';
+import { DeleteProductoHandler } from './application/features/commands/handlers/DeleteProductoCommandHandler';
 
 export const EVENTBUS = 'EVENTBUS'
 
@@ -34,7 +36,9 @@ const providers = [
   CreateProductoCommandHandler,
   GetProductoQueryHandler,
   GetProductoPaginatedQueryHandler,
-  LoginCommandHandler
+  LoginCommandHandler,
+  UpdateProductoHandler,
+  DeleteProductoHandler,
   
 ]
 

@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { Producto } from "src/core/domain/Producto";
 import { ProductoService } from "src/core/domain/services/ProductoService";
 import { UserRole } from "src/core/domain/User";
 import { Paginated } from "../utils/Paginated";
+import { AppResponse } from "src/infrastructure/http-server/model/app.response";
 
 @Injectable()
 export class ProductoUseCases {
@@ -15,17 +16,29 @@ export class ProductoUseCases {
     return await this.productoService.createProducto(nombre, descripcion, precio, cantidad, categoriaId);
   }
 
-  async updateProducto(producto: Producto): Promise<void> {
+  async updateProducto(producto: Producto) {
     if (producto.cantidad < 0) {
-      throw new BadRequestException('La cantidad no puede ser negativa');
+      throw new BadRequestException("La cantidad no puede ser negativa");
     }
-    return this.productoService.updateProducto(producto);
+
+    const existing = await this.productoService.getProductoById(producto.id);
+    if (!existing) {
+      throw new NotFoundException(`Producto con ID ${producto.id} no encontrado`);
+    }
+
+    return await this.productoService.updateProducto(producto);
   }
 
-  async deleteProducto(id: string): Promise<void> {
-    return this.productoService.deleteProducto(id);
-  }
 
+
+  async deleteProducto(id: string): Promise<AppResponse> {
+    const existing = await this.productoService.getProductoById(id);
+    if (!existing) {
+      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
+    }
+  
+    return await this.productoService.deleteProducto(id);
+  }
   async getProductoById(id: string): Promise<Producto | null> {
     return this.productoService.getProductoById(id);
   }
@@ -34,11 +47,14 @@ export class ProductoUseCases {
     return await this.productoService.getAllProductos();
   }
 
-
-  async getAllProductosPaginated(page: number, size: number, userRole: UserRole): Promise<Paginated<Producto>> {
-    return await this.productoService.getAllProductosPaginated(page, size, userRole);
+  async getProductosPaginated(page: number, size: number,nombre?: string,categoriaId?: string): Promise<AppResponse> {
+    if (!Number.isFinite(page) || page < 1) throw new BadRequestException('page inválida');
+    if (!Number.isFinite(size) || size < 1) throw new BadRequestException('size inválida');
+    return this.productoService.getProductosPaginated(page, size,nombre,categoriaId);
   }
 
+
+  
 
 
 }

@@ -16,12 +16,56 @@ export class PostgresProductoRepository implements ProductoRepository {
         private mapper: ProductoMapper,
 
     ) { }
-
-
-    async update(producto: Producto): Promise<void> {
+    
+    async update(producto: Producto): Promise<Producto> {
+        const existing = await this.repository.findOneBy({ id: producto.id });
+        if (!existing) {
+            throw new Error(`Producto con ID ${producto.id} no encontrado`);
+        }
+    
         const entity = this.mapper.mapProductoEntity(producto);
         await this.repository.save(entity);
+    
+        const updatedEntity = await this.repository.findOneBy({ id: producto.id });
+        if (!updatedEntity) {
+            throw new Error(`Error al obtener el producto actualizado con ID ${producto.id}`);
+        }
+    
+        return this.mapper.mapProducto(updatedEntity);
     }
+    
+    
+    async findAllPaginated(offset: number, limit: number,nombre?: string,categoriaId?: string): Promise<Producto[]> {
+        
+        const query = this.repository.createQueryBuilder('producto')
+        .leftJoinAndSelect('producto.categoria', 'categoria');;
+
+    if (nombre) {
+        query.andWhere('producto.nombre ILIKE :nombre', { nombre: `%${nombre}%` });
+    }
+
+  
+    if (categoriaId) {
+        query.andWhere('categoria.nombre ILIKE :nombreCategoria', { nombreCategoria: `%${categoriaId}%` });
+    }
+
+  
+    query.skip(offset).take(limit);
+
+   
+    query.orderBy('producto.id', 'ASC');
+
+    const entities = await query.getMany();
+
+    return entities.map(entity => this.mapper.mapProducto(entity));
+    }
+    count(): Promise<number> {
+        
+        return this.repository.count();
+    }
+
+
+    
 
     async findById(id: string): Promise<Producto | null> {
 
@@ -41,9 +85,13 @@ export class PostgresProductoRepository implements ProductoRepository {
     }
 
     async delete(id: string): Promise<void> {
+        const existing = await this.repository.findOneBy({ id });
+        if (!existing) {
+          throw new Error(`Producto con ID ${id} no encontrado`);
+        }
+      
         await this.repository.delete(id);
-    }
-
+      }
 
 
 

@@ -6,15 +6,18 @@ import{ CATEGORIA_REPOSITORY, type CategoriaRepository } from 'src/core/domain/p
 import { Categoria } from 'src/core/domain/Categoria';
 import { GetCategoriasQuery } from '../CategoriaQuery';
 import { Inject } from '@nestjs/common';
-import { GetProductoQuery } from '../ProductoQuery';
+
 import { PRODUCTO_REPOSITORY, type ProductoRepository } from 'src/core/domain/ports/outbound/ProductoRepository';
 import { Producto } from 'src/core/domain/Producto';
+import { GetProductoQuery } from '../ProductoQuery';
+import { ProductoUseCases } from 'src/core/application/services/ProductoUseCases';
+import { AppResponse } from 'src/infrastructure/http-server/model/app.response';
 
 @QueryHandler(GetProductoQuery)
 export class GetProductoQueryHandler implements IQueryHandler<GetProductoQuery> {
-  constructor( @Inject(PRODUCTO_REPOSITORY)private readonly productoRepo: ProductoRepository) {}
+  constructor( private productoUseCase:ProductoUseCases) {}
 
-  async execute(query: GetProductoQuery): Promise<Producto[]> {
-    return this.productoRepo.findAll();
+  async execute(query: GetProductoQuery): Promise<AppResponse> {
+    return this.productoUseCase.getAllProductos();
   }
 }
