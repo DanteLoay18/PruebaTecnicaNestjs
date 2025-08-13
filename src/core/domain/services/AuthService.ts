@@ -41,7 +41,14 @@ export class AuthService {
 
     }
 
-    async validateUser(username: string, password: string): Promise<{ accessToken: string }> {
+    async validateUser(username: string, password: string): Promise<{
+        status: number;
+        message: string;
+        data: {
+            accessToken: string;
+            user: { username: string; role: string };
+        };
+    }> {
 
         const user = await this.userRepository.findByUsername(username);
         if (!user) {
@@ -57,6 +64,20 @@ export class AuthService {
         const payload = { username: user.username, sub: user.id, role: user.role };
         const accessToken = await this.JwtService.signAsync(payload);
 
-        return { accessToken };
+        return {
+            status: 200,
+            message: 'Login exitoso',
+            data: {
+                accessToken,
+                user: {
+                    username: user.username,
+                    role: user.role
+                }
+            }
+        };
     }
+
+
+    
+    
 }

@@ -7,6 +7,17 @@ export function generateSwaggerDocs(app: INestApplication) {
         .setTitle('Inventario Application')
         .setDescription('Proyecto basado en la base de datos northwind con arquitectura hexagonal')
         .setVersion('1.0')
+        .addBearerAuth(
+            {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+              name: 'Authorization',
+              description: 'Introduce tu token JWT',
+              in: 'header',
+            },
+            'Auth', 
+          )
         .build();
 
     const document = SwaggerModule.createDocument(app, config);

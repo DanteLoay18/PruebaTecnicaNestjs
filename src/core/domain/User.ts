@@ -20,8 +20,6 @@ export class User {
 }
 
 
-
-
 export enum UserRole {
     ADMIN = 'ADMIN',
     EMPLEADO = 'EMPLEADO',

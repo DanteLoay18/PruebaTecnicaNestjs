@@ -19,12 +19,15 @@ import serverConfig from "./config/server.config";
                 DATABASE_NAME: Joi.string().required(),
                 DATABASE_USER: Joi.string().required(),
                 DATABASE_PASSWORD: Joi.string().required(),
+                JWT_SECRET: Joi.string().required(),
+                JWT_EXPIRES_IN: Joi.string().default('1h'),
             }),
             validationOptions: {
                 allowUnknown: true,
                 abortEarly: false,
             },
         })
-    ]
+    ],
+    exports: [ConfigModule],
 })
-export class SharedModule {}
+export class SharedModule { }
