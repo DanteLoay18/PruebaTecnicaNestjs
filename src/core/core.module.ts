@@ -111,6 +111,7 @@ const providers = [
     CqrsModule,
     AdaptersModule,
     JwtModule,
+    
     ...providers,
     // AuthUseCase
   ]

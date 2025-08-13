@@ -42,7 +42,7 @@ export class AuthController {
             new LoginCommand(body.username, body.password)
         );
     }
-
+    
     @Get('check-status')
     @ApiBearerAuth('Auth')
     async checkStatus(@Req() req) {

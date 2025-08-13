@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import * as Joi from "joi";
 import databaseConfig from "./config/database.config";
 import serverConfig from "./config/server.config";
+import { JwtStrategy } from "../http-server/strategy/jwt.strategy";
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -28,6 +29,7 @@ import serverConfig from "./config/server.config";
             },
         })
     ],
-    exports: [ConfigModule],
+    providers: [JwtStrategy],
+    exports: [ConfigModule, ],
 })
 export class SharedModule { }

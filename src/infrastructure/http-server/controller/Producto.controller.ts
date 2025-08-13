@@ -1,8 +1,8 @@
 
 
-import { Body, Controller, Get, Post, Query, Req, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { CreateUserCommand } from "src/core/application/features/commands/CreateUserCommand";
 import { AuthUseCase } from "src/core/application/services/AuthUseCases";
 import { CreateUserRequet } from "../model/create-user-request";
@@ -14,6 +14,8 @@ import { CreateProductoRequet } from "../model/create-product.request";
 import { CreateProductoCommand } from "src/core/application/features/commands/CreareProductoCommand";
 import { GetProductoQuery } from "src/core/application/features/queries/ProductoQuery";
 import { GetProductoPaginatedQuery } from "src/core/application/features/queries/ProductoPaginatedQuery";
+import { JwtAuthGuard } from "../guards/auth.guard";
+import { Roles, RolesGuard } from "../guards/rol.guard";
 // import { AuthUseCase } from "src/auth/application/auth.usecase";
 // import { UserRole } from "src/auth/domain/entities/user.entity";
 
@@ -39,8 +41,10 @@ export class ProductoController {
 
         }));
     }
-
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('EMPLEADO', 'ADMINISTRADOR')
     @Get('get-all')
+    @ApiBearerAuth('Auth')
     async getAllProducto() {
         return await this.query.execute(new GetProductoQuery());
     }
