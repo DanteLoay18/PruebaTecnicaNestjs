@@ -17,7 +17,7 @@ async function bootstrap() {
   
   generateSwaggerDocs(app)
 
-  await app.listen(config.port,'0.0.0.0');
+  await app.listen(config.port);
 
 }
 bootstrap();
