@@ -4,6 +4,8 @@ import { INestApplication } from '@nestjs/common';
 import { ServerConfig } from './infrastructure/shared/config/server.config';
 import { ConfigService } from '@nestjs/config';
 import { generateSwaggerDocs } from './infrastructure/http-server/utils/generate-swagger-docs';
+import fastifyCors from '@fastify/cors';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 function getServerConfig(app: INestApplication): ServerConfig {
   const config: ConfigService = app.get(ConfigService)
@@ -11,11 +13,18 @@ function getServerConfig(app: INestApplication): ServerConfig {
 }
 
 async function bootstrap() {
-  
-  const app = await NestFactory.create(AppModule);
+   const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+  );
   const config = getServerConfig(app)
   
   generateSwaggerDocs(app)
+
+  await app.register(fastifyCors, {
+    origin: ['http://localhost:4200'],
+    credentials: true,
+  });
 
   await app.listen(config.port);
 

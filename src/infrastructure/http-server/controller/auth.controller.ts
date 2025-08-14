@@ -7,6 +7,7 @@ import { CreateUserRequet } from "../model/create-user-request";
 import { LoginCommand } from "src/core/application/features/commands/LoginCommand";
 import { LoginRequet } from "../model/create-login-request";
 import { JwtService } from "@nestjs/jwt";
+import { AppResponse } from "../model/app.response";
 // import { AuthUseCase } from "src/auth/application/auth.usecase";
 // import { UserRole } from "src/auth/domain/entities/user.entity";
 
@@ -42,7 +43,7 @@ export class AuthController {
             new LoginCommand(body.username, body.password)
         );
     }
-    
+
     @Get('check-status')
     @ApiBearerAuth('Auth')
     async checkStatus(@Req() req) {
@@ -51,20 +52,27 @@ export class AuthController {
             if (!authHeader || !authHeader.startsWith('Bearer ')) {
                 return {
                     status: 'unauthorized',
-                    message: 'No token provided'
+                    message: 'No token provided',
+                    data: null
                 };
             }
 
             const token = authHeader.split(' ')[1];
             const payload = await this.jwtService.verifyAsync(token);
 
-            return {
-                accessToken: token,
-                user: {
-                    username: payload.username,
-                    role: payload.role
-                }
+            return <AppResponse>{
+                status: 200,
+                message: 'OK',
+                data: {
+                    accessToken: token,
+                    user: {
+                        username: payload.username,
+                        role: payload.role,
+                    },
+                },
             };
+
+
         } catch (err) {
             return {
                 status: 'unauthorized',

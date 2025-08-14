@@ -10,13 +10,11 @@ export class HealthController {
     constructor(private datasource:DataSource){}
 
 
-    @Head('db')
+    @Head()
     async checkDb(@Res() res:Response) {
 
 
-
         try {
-            await this.datasource.query('SELECT 1');
             return res.status(HttpStatus.OK).send();
 
         } catch (error) {
