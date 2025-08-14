@@ -7,6 +7,7 @@ export interface ProductoRepository {
     save(producto: Producto): Promise<void>;
     update(producto: Producto): Promise<Producto>;
     delete(id: string): Promise<void>;
+    findAllReporte(): Promise<Producto[]>;
 
     findAllPaginated(offset: number, limit: number,nombre?: string,
         categoriaId?: string): Promise<Producto[]>;

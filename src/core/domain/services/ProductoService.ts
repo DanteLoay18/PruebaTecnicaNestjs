@@ -74,9 +74,16 @@ export class ProductoService {
       data: updated
     };
   }
-  
-  
 
+  async getProductosReporte(): Promise<AppResponse> {
+    const productos = await this.productoRepository.findAllReporte();
+    return {
+      status: 200,
+      message: 'Lista de productos con stock menor o igual a 5',
+      data: productos
+    };
+  }
+  
   async deleteProducto(id: string): Promise<AppResponse> {
     const existing = await this.productoRepository.findById(id);
     if (!existing) {

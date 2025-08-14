@@ -16,6 +16,18 @@ export class PostgresProductoRepository implements ProductoRepository {
         private mapper: ProductoMapper,
 
     ) { }
+
+
+    async findAllReporte(): Promise<Producto[]> {
+        const entities = await this.repository
+          .createQueryBuilder('producto')
+          .leftJoinAndSelect('producto.categoria', 'categoria')
+          .where('producto.cantidad <= :cantidad', { cantidad: 5 })
+          .orderBy('producto.cantidad', 'ASC')
+          .getMany();
+      
+        return entities.map(entity => this.mapper.mapProducto(entity));
+      }
     
     async update(producto: Producto): Promise<Producto> {
         const existing = await this.repository.findOneBy({ id: producto.id });

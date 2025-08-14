@@ -4,6 +4,7 @@ import { AuthController } from "./controller/auth.controller";
 import { CoreModule } from "src/core/core.module";
 import { CategoriaController } from "./controller/categoria.controller";
 import { ProductoController } from "./controller/producto.controller";
+import { ReporteController } from "./controller/reporte.controller";
 
 @Module({
     imports: [
@@ -13,7 +14,8 @@ import { ProductoController } from "./controller/producto.controller";
         HealthController,
         AuthController,
         CategoriaController,
-        ProductoController
+        ProductoController,
+        ReporteController,
     ],
 })
 export class HttpServerModule {

@@ -53,6 +53,10 @@ export class ProductoUseCases {
     return this.productoService.getProductosPaginated(page, size,nombre,categoriaId);
   }
 
+  async getProductosReporte(): Promise<AppResponse> {
+    return await this.productoService.getProductosReporte();
+  }
+
 
   
 

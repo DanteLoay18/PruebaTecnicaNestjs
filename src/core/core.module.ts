@@ -25,6 +25,7 @@ import { SharedModule } from 'src/infrastructure/shared/shared.module';
 import { ConfigService } from '@nestjs/config';
 import { UpdateProductoHandler } from './application/features/commands/handlers/UpdateProductoCommandHandler';
 import { DeleteProductoHandler } from './application/features/commands/handlers/DeleteProductoCommandHandler';
+import { GetReporteQueryHandler } from './application/features/queries/handlers/ReporteQueryHandler';
 
 export const EVENTBUS = 'EVENTBUS'
 
@@ -39,6 +40,7 @@ const providers = [
   LoginCommandHandler,
   UpdateProductoHandler,
   DeleteProductoHandler,
+  GetReporteQueryHandler,
   
 ]
 
