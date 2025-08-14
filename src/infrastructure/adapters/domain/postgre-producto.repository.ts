@@ -85,7 +85,7 @@ export class PostgresProductoRepository implements ProductoRepository {
             relations: ['categoria'], 
         });
     
-        return entity ? this.mapper.mapProducto(entity) : null;
+        return entity ? this.mapper.mapOneProducto(entity) : null;
     }
     
 

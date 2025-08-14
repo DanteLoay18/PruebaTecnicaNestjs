@@ -40,6 +40,21 @@ export class ProductoMapper implements Mapper<ProductoEntity[], Producto[]> {
 
     }
 
+     mapOneProducto(entity: ProductoEntity): Producto {
+
+        return new Producto(
+            entity.id,
+            entity.nombre,
+            entity.descripcion,
+            entity.precio,
+            entity.cantidad,
+            entity.categoriaId
+            
+           
+        );
+
+    }
+
     mapProductoEntity(producto: Producto): ProductoEntity {
         const entity = new ProductoEntity();
         entity.id = producto.id;

@@ -27,7 +27,8 @@ async function bootstrap() {
   }));
 
   await app.register(fastifyCors, {
-    origin: ['http://localhost:4200'],
+    origin: ['http://localhost:4200', 'https://d2mlkfsxm41wzs.cloudfront.net'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
 
