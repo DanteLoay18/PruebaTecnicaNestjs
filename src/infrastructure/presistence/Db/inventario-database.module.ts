@@ -25,6 +25,8 @@ import { ProductoEntity } from './entities/Producto.entity';
                         CategoriaEntity,
                         ProductoEntity
                     ],
+                    ssl:  { rejectUnauthorized: false },
+                    
                     synchronize: true,
                     logging: ['query']
                 }
