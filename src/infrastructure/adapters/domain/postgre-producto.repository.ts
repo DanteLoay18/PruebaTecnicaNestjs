@@ -32,7 +32,7 @@ export class PostgresProductoRepository implements ProductoRepository {
     async update(producto: Producto): Promise<Producto> {
         const existing = await this.repository.findOneBy({ id: producto.id });
         if (!existing) {
-            throw new Error(`Producto con ID ${producto.id} no encontrado`);
+            throw new Error(`Producto con ID ${producto.id} no encontrado000`);
         }
 
         const entity = this.mapper.mapProductoEntity(producto);

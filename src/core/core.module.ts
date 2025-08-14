@@ -94,7 +94,7 @@ const providers = [
     {
 
       provide: ProductoUseCases,
-      useFactory:(service:ProductoService)=>new ProductoUseCases(service),
+      useFactory:(service:ProductoService, userRepository:UserRepository)=>new ProductoUseCases(service,userRepository),
       inject:[ProductoService]
 
     },
@@ -109,7 +109,9 @@ const providers = [
         return new AuthService(repository, jwtService);
       },
       inject: [USER_REPOSITORY, ConfigService],
-    }
+    },
+    
+    
     
   ],
   exports: [

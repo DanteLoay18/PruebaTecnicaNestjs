@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/core/domain/User";
+import { User, UserRole } from "src/core/domain/User";
 import { UserEntity } from "src/infrastructure/presistence/Db/entities/user.entity";
 import { Repository } from "typeorm";
 import { UserMapper } from "../mapper/UserMapper";
@@ -29,11 +29,15 @@ export class PostgresUserRepository implements UserRepository {
         await this.repository.save(user);
     }
 
-    // findByUsername(username:string):Promise<User|null>{
-    //     return this.repository.findOneBy({username });
-    // }
-    // save(user:User):Promise<void>{
+    async findByRole(role: UserRole): Promise<User[]> {
+        const entities = await this.repository.find({
+            where: { role }
+        });
+        return entities.map(entity => this.mapper.mapUser(entity));
+    }
 
-    // }
+    
+
+    
 
 }

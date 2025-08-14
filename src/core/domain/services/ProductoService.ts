@@ -18,8 +18,15 @@ export class ProductoService {
     cantidad: number,
     categoriaId: string
   ): Promise<AppResponse> {
-    if (cantidad < 0) {
-      throw new BadRequestException('La cantidad no puede ser negativa');
+    if (cantidad <= 0) {
+      throw new BadRequestException({
+
+                status: 401,
+                message: 'Cantidad no puede ser menor que 0 ',
+                data: null
+      }
+        
+      );
     }
   
     
@@ -31,8 +38,11 @@ export class ProductoService {
     );
   
     if (existeDuplicado) {
-      throw new BadRequestException(
-        `Ya existe un producto con el nombre "${nombre}" `
+      throw new BadRequestException({
+                status: 401,
+                message: 'Producto ya existe',
+                data: null
+      }
       );
     }
   
@@ -57,20 +67,28 @@ export class ProductoService {
   
 
   async updateProducto(producto: Producto): Promise<AppResponse> {
-    if (producto.cantidad < 0) {
-      throw new BadRequestException('La cantidad no puede ser negativa');
+    if (producto.cantidad <= 0) {
+      throw new BadRequestException({
+                status: 401,
+                message: 'Cantidad no puede ser negativa',
+                data: null
+      });
     }
   
     const existing = await this.productoRepository.findById(producto.id);
     if (!existing) {
-      throw new NotFoundException(`Producto con ID ${producto.id} no encontrado`);
+      throw new NotFoundException({
+                status: 401,
+                message: 'producto no encontrado',
+                data: null
+      });
     }
   
     const updated = await this.productoRepository.update(producto);
   
     return {
       status: 200,
-      message: 'Producto actualizado correctamente',
+      message: 'Producto actualizado correctamenteeee',
       data: updated
     };
   }
@@ -87,7 +105,12 @@ export class ProductoService {
   async deleteProducto(id: string): Promise<AppResponse> {
     const existing = await this.productoRepository.findById(id);
     if (!existing) {
-      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
+      throw new NotFoundException({
+
+                status: 401,
+                message: 'producto no encontrado',
+                data: null
+      });
     }
   
     await this.productoRepository.delete(id);

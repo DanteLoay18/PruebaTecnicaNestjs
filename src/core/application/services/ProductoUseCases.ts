@@ -4,38 +4,100 @@ import { ProductoService } from "src/core/domain/services/ProductoService";
 import { UserRole } from "src/core/domain/User";
 import { Paginated } from "../utils/Paginated";
 import { AppResponse } from "src/infrastructure/http-server/model/app.response";
+import type { UserRepository } from "src/core/domain/ports/outbound";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { AwsSesService } from "src/core/domain/services/AwsSes.service";
+
+
 
 @Injectable()
 export class ProductoUseCases {
-  constructor(private readonly productoService: ProductoService) {}
+  constructor(private readonly productoService: ProductoService,
+    private readonly userRepository:UserRepository,
+    private readonly awsSesService: AwsSesService
+  ) {}
 
   async createProducto(nombre: string, descripcion: string, precio: number, cantidad: number, categoriaId: string) {
-    if (cantidad < 0) {
-      throw new BadRequestException('La cantidad no puede ser negativa');
+    if (cantidad <= 0) {
+      throw new BadRequestException({
+
+                status: 401,
+                message: 'Cantidad no puede ser menor o igual que 0 ',
+                data: null
+
+
+        
+      });
     }
     return await this.productoService.createProducto(nombre, descripcion, precio, cantidad, categoriaId);
   }
 
+
+
+
+
+
+
+
+
+
   async updateProducto(producto: Producto) {
-    if (producto.cantidad < 0) {
-      throw new BadRequestException("La cantidad no puede ser negativa");
+    if (producto.cantidad <= 0) {
+      throw new BadRequestException({
+
+                status: 401,
+                message: 'Cantidad no puede ser negativa',
+                data: null
+      });
     }
 
     const existing = await this.productoService.getProductoById(producto.id);
     if (!existing) {
-      throw new NotFoundException(`Producto con ID ${producto.id} no encontrado`);
+      throw new NotFoundException({
+
+                status: 401,
+                message: 'producto no encontrado',
+                data: null
+      });
     }
+
+    if (producto.cantidad <= 4) {
+      const admins = await this.userRepository.findByRole(UserRole.ADMIN);
+      const adminEmails = admins.map(a => a.username); // si username es el email
+
+      if (adminEmails.length > 0) {
+        await this.sendLowStockEmail(adminEmails, producto);
+      }
+    }
+
 
     return await this.productoService.updateProducto(producto);
   }
 
+  /*
+  private async sendLowStockEmail(emails: string[], producto: Producto) {
+    const ses = new SESClient({ region: "us-east-1" });
+
+    const command = new SendEmailCommand({
+      Source: "tu-email-verificado@dominio.com", // Debe estar verificado en SES
+      Destination: { ToAddresses: emails },
+      Message: {
+        Subject: { Data: `Stock bajo: ${producto.nombre}` },
+        Body: {
+          Text: {
+            Data: `El producto "${producto.nombre}" tiene stock bajo (${producto.cantidad} unidades).`
+          }
+        }
+      }
+    });
+
+    await ses.send(command);
+  }
+    */
 
 
   async deleteProducto(id: string): Promise<AppResponse> {
     const existing = await this.productoService.getProductoById(id);
-    if (!existing) {
-      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
-    }
   
     return await this.productoService.deleteProducto(id);
   }
