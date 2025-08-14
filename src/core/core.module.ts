@@ -26,6 +26,7 @@ import { ConfigService } from '@nestjs/config';
 import { UpdateProductoHandler } from './application/features/commands/handlers/UpdateProductoCommandHandler';
 import { DeleteProductoHandler } from './application/features/commands/handlers/DeleteProductoCommandHandler';
 import { GetReporteQueryHandler } from './application/features/queries/handlers/ReporteQueryHandler';
+import { AwsSesService } from './domain/services/AwsSes.service';
 
 export const EVENTBUS = 'EVENTBUS'
 
@@ -94,7 +95,7 @@ const providers = [
     {
 
       provide: ProductoUseCases,
-      useFactory:(service:ProductoService, userRepository:UserRepository)=>new ProductoUseCases(service,userRepository),
+      useFactory:(service:ProductoService, userRepository:UserRepository, awsSesService: AwsSesService)=>new ProductoUseCases(service,userRepository, awsSesService),
       inject:[ProductoService]
 
     },

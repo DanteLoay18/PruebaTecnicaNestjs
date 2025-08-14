@@ -65,6 +65,7 @@ export class ProductoController {
     @ApiQuery({ name: 'size', required: false, type: Number, description: 'Items por página' })
     @ApiQuery({ name: 'page', required: false, type: Number, description: 'Número de página' })
     @Get('pagination')
+    @ApiBearerAuth('Auth')
     async getProductos(
         @Query('page') page = 1,
         @Query('size') size = 10,

@@ -152,7 +152,7 @@ export class ProductoService {
     ]);
   
     const paginated = Paginated.create({
-      data: productos,
+      results: productos,
       page,
       size,
       count: total

@@ -5,7 +5,7 @@ import { UserRole } from "src/core/domain/User";
 import { Paginated } from "../utils/Paginated";
 import { AppResponse } from "src/infrastructure/http-server/model/app.response";
 import type { UserRepository } from "src/core/domain/ports/outbound";
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+// import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { AwsSesService } from "src/core/domain/services/AwsSes.service";
 
 
@@ -64,36 +64,37 @@ export class ProductoUseCases {
     if (producto.cantidad <= 4) {
       const admins = await this.userRepository.findByRole(UserRole.ADMIN);
       const adminEmails = admins.map(a => a.username); // si username es el email
-
-      if (adminEmails.length > 0) {
-        await this.sendLowStockEmail(adminEmails, producto);
-      }
+      this.sendLowStockEmail(adminEmails, producto);
+      // if (adminEmails.length > 0) {
+        // await this.awsSesService.sendEmail(adminEmails, producto);
+      // }
     }
 
 
     return await this.productoService.updateProducto(producto);
   }
 
-  /*
+  
   private async sendLowStockEmail(emails: string[], producto: Producto) {
-    const ses = new SESClient({ region: "us-east-1" });
+    // const ses = new SESClient({ region: "us-east-1" });
 
-    const command = new SendEmailCommand({
-      Source: "tu-email-verificado@dominio.com", // Debe estar verificado en SES
-      Destination: { ToAddresses: emails },
-      Message: {
-        Subject: { Data: `Stock bajo: ${producto.nombre}` },
-        Body: {
-          Text: {
-            Data: `El producto "${producto.nombre}" tiene stock bajo (${producto.cantidad} unidades).`
-          }
-        }
-      }
-    });
+    await this.awsSesService.sendEmail(emails, `Stock bajo : ${producto.nombre}`, `El producto "${producto.nombre}" tiene stock bajo (${producto.cantidad} unidades).`);
+    // const command = new SendEmailCommand({
+    //   Source: "tu-email-verificado@dominio.com", // Debe estar verificado en SES
+    //   Destination: { ToAddresses: emails },
+    //   Message: {
+    //     Subject: { Data: `Stock bajo: ${producto.nombre}` },
+    //     Body: {
+    //       Text: {
+    //         Data: `El producto "${producto.nombre}" tiene stock bajo (${producto.cantidad} unidades).`
+    //       }
+    //     }
+    //   }
+    // });
 
-    await ses.send(command);
+    // await ses.send(command);
   }
-    */
+    
 
 
   async deleteProducto(id: string): Promise<AppResponse> {

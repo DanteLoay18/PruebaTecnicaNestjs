@@ -2,13 +2,13 @@ export interface PaginateParams<T>{
     size: number;
     page: number;
     count: number;
-    data: T[];
+    results: T[];
 
 }
 
 export class Paginated<T>{
 
-    public data: T[];
+    public results: T[];
     public totalRecords:number;
     public pageSize: number;
     public totalPages: number;
@@ -16,7 +16,7 @@ export class Paginated<T>{
 
     static create<T>(params: PaginateParams<T>){
         const response: Paginated<T>={
-            data : params.data,
+            results : params.results,
             currentPage: params.page,
             pageSize: params.size,
             totalPages: Math.ceil(params.count / params.size),
