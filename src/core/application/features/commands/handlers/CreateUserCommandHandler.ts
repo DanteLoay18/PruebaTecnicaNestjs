@@ -8,7 +8,6 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     constructor(private authUseCase: AuthUseCase) { }
 
     async execute(command: CreateUserCommand) {
-        console.log("Handler", command)
 
        return this.authUseCase.register(command.createUserRequest.username, command.createUserRequest.password, command.createUserRequest.role);
 

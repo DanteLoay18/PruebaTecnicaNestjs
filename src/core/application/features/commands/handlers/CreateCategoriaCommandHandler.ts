@@ -11,7 +11,6 @@ export class CreateCategoriaCommandHandler implements ICommandHandler<CreateCate
     constructor(private categoriaUseCase:CategoriaUseCase){}
     
     async execute(command: CreateCategoriaCommand){
-        console.log("Handler", command)   
         
         return this.categoriaUseCase.createCategoria(command.createCategoriaRequest.nombre,command.createCategoriaRequest.descripcion);
     }

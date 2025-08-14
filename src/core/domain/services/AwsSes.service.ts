@@ -22,7 +22,7 @@ export class AwsSesService {
         },
         Subject: { Data: subject }
       },
-      Source: 'no-reply@tudominio.com' // Debe estar verificado en SES
+      Source: 'no-reply@vexplora.com' 
     });
 
     await this.client.send(command);

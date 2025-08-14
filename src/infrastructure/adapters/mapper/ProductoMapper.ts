@@ -19,7 +19,7 @@ export class ProductoMapper implements Mapper<ProductoEntity[], Producto[]> {
             p.descripcion,
             p.precio,
             p.cantidad,
-            p.categoriaId
+            p.categoria.nombre
 
         ))
 
@@ -33,7 +33,8 @@ export class ProductoMapper implements Mapper<ProductoEntity[], Producto[]> {
             entity.descripcion,
             entity.precio,
             entity.cantidad,
-            entity.categoriaId
+            entity.categoria?.nombre
+            
            
         );
 

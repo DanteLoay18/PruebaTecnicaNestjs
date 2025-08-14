@@ -27,6 +27,7 @@ import { UpdateProductoHandler } from './application/features/commands/handlers/
 import { DeleteProductoHandler } from './application/features/commands/handlers/DeleteProductoCommandHandler';
 import { GetReporteQueryHandler } from './application/features/queries/handlers/ReporteQueryHandler';
 import { AwsSesService } from './domain/services/AwsSes.service';
+import { UserService } from './domain/services/UserService';
 
 export const EVENTBUS = 'EVENTBUS'
 
@@ -93,10 +94,23 @@ const providers = [
 
     },
     {
+      provide:UserService,
+      useFactory:(repository:UserRepository)=> new UserService(repository),
+      inject:[USER_REPOSITORY]
+
+    },
+    {
 
       provide: ProductoUseCases,
-      useFactory:(service:ProductoService, userRepository:UserRepository, awsSesService: AwsSesService)=>new ProductoUseCases(service,userRepository, awsSesService),
-      inject:[ProductoService]
+      useFactory:(service:ProductoService, userService:UserService, awsSesService: AwsSesService)=>new ProductoUseCases(service,userService, awsSesService),
+      inject:[ProductoService, UserService, AwsSesService]
+
+    },
+    {
+
+      provide: AwsSesService,
+      useFactory:()=>new AwsSesService(),
+      inject:[]
 
     },
 

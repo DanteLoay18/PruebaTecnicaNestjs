@@ -26,10 +26,8 @@ export class AuthService {
 
         const id = randomUUID(); // UUID v4
         const passwordHash = await bcrypt.hash(password, 10);
-        console.log('PRUEBAAAA', username, password);
         const newUser = new User(id, username, passwordHash, User.getUserRole(role));
 
-        console.log('new user auth service', newUser);
 
         await this.userRepository.save(newUser);
 

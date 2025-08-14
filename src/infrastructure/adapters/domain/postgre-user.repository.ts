@@ -24,15 +24,20 @@ export class PostgresUserRepository implements UserRepository {
     
     async save(user: User): Promise<void> {
 
-        console.log('USER REPOSITORY', user);
         
         await this.repository.save(user);
     }
 
     async findByRole(role: UserRole): Promise<User[]> {
+
         const entities = await this.repository.find({
             where: { role }
         });
+
+        if(entities.length == 0) return [];
+
+        // return entities;
+
         return entities.map(entity => this.mapper.mapUser(entity));
     }
 

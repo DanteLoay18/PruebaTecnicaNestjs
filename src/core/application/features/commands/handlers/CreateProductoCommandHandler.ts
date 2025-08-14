@@ -14,7 +14,6 @@ export class CreateProductoCommandHandler implements ICommandHandler<CreateProdu
     constructor(private productoUseCase:ProductoUseCases){}
     
     async execute(command: CreateProductoCommand){
-        console.log("Handler", command)   
         
         return this.productoUseCase.createProducto(
             command.productoRequest.nombre,

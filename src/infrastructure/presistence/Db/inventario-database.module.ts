@@ -28,7 +28,7 @@ import { ProductoEntity } from './entities/Producto.entity';
                     ssl:  { rejectUnauthorized: false },
                     
                     synchronize: true,
-                    logging: ['query']
+                    // logging: ['query']
                 }
             },
             inject: [ConfigService],
