@@ -32,7 +32,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(config.port);
+  await app.listen(config.port, '0.0.0.0');
 
 }
 bootstrap();
