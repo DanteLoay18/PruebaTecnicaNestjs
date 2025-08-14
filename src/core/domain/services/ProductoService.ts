@@ -123,9 +123,24 @@ export class ProductoService {
   }
   
 
-  async getProductoById(id: string): Promise<Producto | null> {
-    return this.productoRepository.findById(id);
+  async getProductoById(id: string): Promise<AppResponse> {
+    const producto = await this.productoRepository.findById(id);
+  
+    if (!producto) {
+      return {
+        status: 404,
+        message: "Producto no encontrado",
+        data: null
+      };
+    }
+  
+    return {
+      status: 200,
+      message: "Producto encontrado",
+      data: producto
+    };
   }
+  
 
   async getAllProductos(): Promise<AppResponse> {
     

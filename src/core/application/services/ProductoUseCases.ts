@@ -100,10 +100,12 @@ export class ProductoUseCases {
   
     return await this.productoService.deleteProducto(id);
   }
-  async getProductoById(id: string): Promise<Producto | null> {
-    return this.productoService.getProductoById(id);
+  async getProductoById(id: string) {
+    return await this.productoService.getProductoById(id);
+  
+    
   }
-
+  
   async getAllProductos() {
     return await this.productoService.getAllProductos();
   }

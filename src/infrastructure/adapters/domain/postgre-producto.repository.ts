@@ -79,13 +79,15 @@ export class PostgresProductoRepository implements ProductoRepository {
 
 
 
-
     async findById(id: string): Promise<Producto | null> {
-
-        return this.repository.findOneBy({ id })
-            .then(entity => (entity ? this.mapper.mapProducto(entity) : null));
-
+        const entity = await this.repository.findOne({
+            where: { id },
+            relations: ['categoria'], 
+        });
+    
+        return entity ? this.mapper.mapProducto(entity) : null;
     }
+    
 
     async findAll(): Promise<Producto[]> {
         return this.repository.find()

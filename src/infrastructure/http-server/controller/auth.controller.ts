@@ -2,13 +2,11 @@ import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CreateUserCommand } from "src/core/application/features/commands/CreateUserCommand";
-import { AuthUseCase } from "src/core/application/services/AuthUseCases";
 import { CreateUserRequet } from "../model/create-user-request";
 import { LoginCommand } from "src/core/application/features/commands/LoginCommand";
 import { LoginRequet } from "../model/create-login-request";
 import { JwtService } from "@nestjs/jwt";
-// import { AuthUseCase } from "src/auth/application/auth.usecase";
-// import { UserRole } from "src/auth/domain/entities/user.entity";
+
 
 @ApiBearerAuth('Auth')
 @Controller('auth')

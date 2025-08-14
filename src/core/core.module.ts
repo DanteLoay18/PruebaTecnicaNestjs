@@ -28,6 +28,7 @@ import { DeleteProductoHandler } from './application/features/commands/handlers/
 import { GetReporteQueryHandler } from './application/features/queries/handlers/ReporteQueryHandler';
 import { AwsSesService } from './domain/services/AwsSes.service';
 import { UserService } from './domain/services/UserService';
+import { GetProductoByIdQueryHandler } from './application/features/queries/handlers/ProductoIdQueryHandler';
 
 export const EVENTBUS = 'EVENTBUS'
 
@@ -43,6 +44,7 @@ const providers = [
   UpdateProductoHandler,
   DeleteProductoHandler,
   GetReporteQueryHandler,
+  GetProductoByIdQueryHandler,
   
 ]
 

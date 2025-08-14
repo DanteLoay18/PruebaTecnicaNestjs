@@ -3,13 +3,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { CreateUserCommand } from "src/core/application/features/commands/CreateUserCommand";
-import { AuthUseCase } from "src/core/application/services/AuthUseCases";
-import { CreateUserRequet } from "../model/create-user-request";
-import { CreateCategoriaRequest } from "src/core/shared/dto/CreateCategoriaRequest";
-import { CreateCategoriaCommand } from "src/core/application/features/commands/CreateCategoriaCommand";
-import { CreateCategoriaRequet } from "../model/create-cat-request";
-import { GetCategoriasQuery } from "src/core/application/features/queries/CategoriaQuery";
 import { CreateProductoRequet } from "../model/create-product.request";
 import { CreateProductoCommand } from "src/core/application/features/commands/CreareProductoCommand";
 import { GetProductoPaginatedQuery } from "src/core/application/features/queries/ProductoPaginatedQuery";
@@ -19,10 +12,10 @@ import { GetProductoQuery } from "src/core/application/features/queries/Producto
 import { Producto } from "src/core/domain/Producto";
 import { UpdateProductoRequet } from "../model/update-product.request";
 import { UpdateProductoCommand } from "src/core/application/features/commands/UpdateProductoCommand";
-import { AppResponse } from "../model/app.response";
+
 import { DeleteProductoCommand } from "src/core/application/features/commands/DeleteProductoCommand";
-// import { AuthUseCase } from "src/auth/application/auth.usecase";
-// import { UserRole } from "src/auth/domain/entities/user.entity";
+import { GetProductoByIdQuery } from "src/core/application/features/queries/ProductoIdQuery";
+
 
 @ApiTags('Producto')
 @Controller('producto')
@@ -34,10 +27,10 @@ export class ProductoController {
     ) { }
 
 
-    //@UseGuards(JwtAuthGuard, RolesGuard)
-    //@Roles('ADMINISTRADOR')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMINISTRADOR')
     @Post('register')
-    //@ApiBearerAuth('Auth')
+    @ApiBearerAuth('Auth')
     async register(
         @Body() body: CreateProductoRequet
     ) {
@@ -50,10 +43,10 @@ export class ProductoController {
 
         }));
     }
-    //@UseGuards(JwtAuthGuard, RolesGuard)
-    //@Roles('EMPLEADO', 'ADMINISTRADOR')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('EMPLEADO', 'ADMINISTRADOR')
     @Get('get-all')
-    //@ApiBearerAuth('Auth')
+    @ApiBearerAuth('Auth')
     async getAllProducto() {
         return await this.query.execute(new GetProductoQuery);
     }
@@ -76,10 +69,10 @@ export class ProductoController {
     }
 
 
-    //@UseGuards(JwtAuthGuard, RolesGuard)
-    //@Roles('ADMINISTRADOR')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMINISTRADOR')
     @Put('update')
-    //@ApiBearerAuth('Auth')
+    @ApiBearerAuth('Auth')
     async updateProducto(
 
         @Body() body: UpdateProductoRequet
@@ -97,9 +90,21 @@ export class ProductoController {
         return await this.command.execute(new UpdateProductoCommand(producto));
     }
 
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMINISTRADOR')
     @Delete(':id')
+    @ApiBearerAuth('Auth')
     async deleteProducto(@Param('id') id: string){
         return await this.command.execute(new DeleteProductoCommand(id));
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMINISTRADOR')
+    @Get(':id')
+    @ApiBearerAuth('Auth')
+    async getProductoById(@Param('id') id: string) {
+      return this.query.execute(new GetProductoByIdQuery(id));
     }
 
 
