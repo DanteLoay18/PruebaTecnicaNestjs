@@ -47,7 +47,7 @@ export class AuthService {
             user: { username: string; role: string };
         };
     }> {
-
+        console.log(username);
         const user = await this.userRepository.findByUsername(username);
         if (!user) {
             throw new UnauthorizedException({
