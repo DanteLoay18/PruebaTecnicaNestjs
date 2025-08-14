@@ -37,7 +37,7 @@ export class PostgresProductoRepository implements ProductoRepository {
 
         const entity = this.mapper.mapProductoEntity(producto);
         await this.repository.save(entity);
-        
+
 
         const updatedEntity = await this.repository.findOneBy({ id: producto.id });
         if (!updatedEntity) {
@@ -59,7 +59,10 @@ export class PostgresProductoRepository implements ProductoRepository {
 
 
         if (categoriaId) {
-            query.andWhere('categoria.nombre ILIKE :nombreCategoria', { nombreCategoria: `%${categoriaId}%` });
+            // si hiciste el join con alias 'categoria'
+            query.andWhere('categoria.id = :categoriaId', { categoriaId });
+            // alternativamente, sin usar el join:
+            // query.andWhere('producto.categoriaId = :categoriaId', { categoriaId });
         }
 
 
@@ -82,12 +85,12 @@ export class PostgresProductoRepository implements ProductoRepository {
     async findById(id: string): Promise<Producto | null> {
         const entity = await this.repository.findOne({
             where: { id },
-            relations: ['categoria'], 
+            relations: ['categoria'],
         });
-    
+
         return entity ? this.mapper.mapOneProducto(entity) : null;
     }
-    
+
 
     async findAll(): Promise<Producto[]> {
         return this.repository.find()
