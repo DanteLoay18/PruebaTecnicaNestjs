@@ -52,13 +52,21 @@ export class AuthService {
 
         const user = await this.userRepository.findByUsername(username);
         if (!user) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException({
+                status: 401,
+                message: 'Credenciales invalidas ',
+                data: null
+            });
         }
 
         const isPasswordVali = await bcrypt.compare(password, user.password)
 
         if (!isPasswordVali) {
-            throw new UnauthorizedException('Invalid credentials')
+            throw new UnauthorizedException({
+                status: 401,
+                message: 'Credenciales invalidas',
+                data: null
+            })
         }
 
         const payload = { username: user.username, sub: user.id, role: user.role };
@@ -78,6 +86,6 @@ export class AuthService {
     }
 
 
-    
-    
+
+
 }
